@@ -5,14 +5,15 @@ import requests
 import base64
 
 # Load TinyLlama model and tokenizer only once
+# Load GPT-2 model and tokenizer only once
 @st.cache_resource
 def load_model():
-tokenizer = AutoTokenizer.from_pretrained("gpt2")
-model = AutoModelForCausalLM.from_pretrained("gpt2")
-
+    tokenizer = AutoTokenizer.from_pretrained("gpt2")
+    model = AutoModelForCausalLM.from_pretrained("gpt2")
     return tokenizer, model
 
 tokenizer, model = load_model()
+
 
 # Function to generate response from local model with proper instruction formatting
 def generate_jarvis_response(prompt):
