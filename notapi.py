@@ -4,26 +4,25 @@ import torch
 import requests
 import base64
 
-# Load TinyLlama model and tokenizer only once
-# Load GPT-2 model and tokenizer only once
+# Load Phi-2 model and tokenizer only once
 @st.cache_resource
 def load_model():
-    tokenizer = AutoTokenizer.from_pretrained("gpt2")
-    model = AutoModelForCausalLM.from_pretrained("gpt2")
+    tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-2")
+    model = AutoModelForCausalLM.from_pretrained("microsoft/phi-2")
     return tokenizer, model
 
 tokenizer, model = load_model()
 
-
+# Generate response using phi-2
 def generate_jarvis_response(prompt):
     chat_prompt = f"""You are Jarvis, a factual and helpful assistant created by Rehan Hussain.
 
 Question: {prompt}
 Answer:"""
-    inputs = tokenizer.encode(chat_prompt, return_tensors="pt")
+    inputs = tokenizer(chat_prompt, return_tensors="pt")
     outputs = model.generate(
-        inputs,
-        max_length=200,
+        **inputs,
+        max_length=256,
         temperature=0.6,
         top_p=0.85,
         repetition_penalty=1.1,
@@ -98,6 +97,6 @@ elif choice == "About Jarvis":
     st.header("About Jarvis")
     st.write("Created by **Rehan Hussain** without external AI APIs.")
     st.write("""
-        Jarvis is your futuristic AI assistant, now running locally using TinyLlama.
+        Jarvis is your futuristic AI assistant, now running locally using Phi-2.
         No external API needed for chat!
     """)
