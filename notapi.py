@@ -7,8 +7,9 @@ import base64
 # Load TinyLlama model and tokenizer only once
 @st.cache_resource
 def load_model():
-    tokenizer = AutoTokenizer.from_pretrained("TinyLlama/TinyLlama-1.1B-Chat-v1.0")
-    model = AutoModelForCausalLM.from_pretrained("TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+tokenizer = AutoTokenizer.from_pretrained("gpt2")
+model = AutoModelForCausalLM.from_pretrained("gpt2")
+
     return tokenizer, model
 
 tokenizer, model = load_model()
