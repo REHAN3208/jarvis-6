@@ -15,29 +15,22 @@ def load_model():
 tokenizer, model = load_model()
 
 
-# Function to generate response from local model with proper instruction formatting
 def generate_jarvis_response(prompt):
-    try:
-        chat_prompt = f"""You are Jarvis, an intelligent assistant created by Rehan Hussain.
-Your job is to answer clearly, respectfully, and helpfully.
+    chat_prompt = f"""You are Jarvis, a factual and helpful assistant created by Rehan Hussain.
 
-Human: {prompt}
-Jarvis:"""
-
-        inputs = tokenizer.encode(chat_prompt, return_tensors="pt")
-        outputs = model.generate(
-            inputs,
-            max_length=200,
-            pad_token_id=tokenizer.eos_token_id,
-            do_sample=True,
-            temperature=0.7,
-            top_p=0.9,
-            repetition_penalty=1.1,
-        )
-        response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        return response.split("Jarvis:")[-1].strip()
-    except Exception as e:
-        return f"Jarvis encountered an error: {e}"
+Question: {prompt}
+Answer:"""
+    inputs = tokenizer.encode(chat_prompt, return_tensors="pt")
+    outputs = model.generate(
+        inputs,
+        max_length=200,
+        temperature=0.6,
+        top_p=0.85,
+        repetition_penalty=1.1,
+        pad_token_id=tokenizer.eos_token_id
+    )
+    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    return response.split("Answer:")[-1].strip()
 
 # News API (still requires key)
 news_api_key = "MzVkNjIzMGUwMWY5NDI0ZGIwYjdlOWNmZTg1YTUzOWQ="  # Base64 encoded
