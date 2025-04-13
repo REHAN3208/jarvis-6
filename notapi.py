@@ -1,34 +1,27 @@
 import streamlit as st
-from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 import requests
 import base64
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 
-# Load Phi-2 model and tokenizer only once
 @st.cache_resource
 def load_model():
-    tokenizer = AutoTokenizer.from_pretrained("microsoft/phi-2")
-    model = AutoModelForCausalLM.from_pretrained("microsoft/phi-2")
+    tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-small")
+    model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-small")
     return tokenizer, model
 
 tokenizer, model = load_model()
 
-# Generate response using phi-2
 def generate_jarvis_response(prompt):
-    chat_prompt = f"""You are Jarvis, a factual and helpful assistant created by Rehan Hussain.
-
-Question: {prompt}
-Answer:"""
-    inputs = tokenizer(chat_prompt, return_tensors="pt")
+    inputs = tokenizer(prompt, return_tensors="pt")
     outputs = model.generate(
         **inputs,
         max_length=256,
         temperature=0.6,
-        top_p=0.85,
-        repetition_penalty=1.1,
-        pad_token_id=tokenizer.eos_token_id
+        top_p=0.9,
+        repetition_penalty=1.1
     )
-    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    return tokenizer.decode(outputs[0], skip_special_tokens=True)
     return response.split("Answer:")[-1].strip()
 
 # News API (still requires key)
