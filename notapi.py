@@ -16,12 +16,13 @@ def generate_jarvis_response(prompt):
     inputs = tokenizer(prompt, return_tensors="pt")
     outputs = model.generate(
         **inputs,
-        max_length=256,
+        max_length=128,
         temperature=0.6,
         top_p=0.9,
         repetition_penalty=1.1
     )
     return tokenizer.decode(outputs[0], skip_special_tokens=True)
+
     return response.split("Answer:")[-1].strip()
 
 # News API (still requires key)
