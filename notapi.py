@@ -18,23 +18,24 @@ tokenizer, model = load_model()
 # Function to generate response from local model with proper instruction formatting
 def generate_jarvis_response(prompt):
     try:
-        chat_prompt = f"""### Human:
-{prompt}
+        chat_prompt = f"""You are Jarvis, an intelligent assistant created by Rehan Hussain.
+Your job is to answer clearly, respectfully, and helpfully.
 
-### Assistant:"""
+Human: {prompt}
+Jarvis:"""
+
         inputs = tokenizer.encode(chat_prompt, return_tensors="pt")
         outputs = model.generate(
             inputs,
-            max_length=256,
+            max_length=200,
             pad_token_id=tokenizer.eos_token_id,
             do_sample=True,
             temperature=0.7,
-            top_p=0.95,
-            repetition_penalty=1.2,
+            top_p=0.9,
+            repetition_penalty=1.1,
         )
         response = tokenizer.decode(outputs[0], skip_special_tokens=True)
-        response = response.split("### Assistant:")[-1].strip()
-        return response
+        return response.split("Jarvis:")[-1].strip()
     except Exception as e:
         return f"Jarvis encountered an error: {e}"
 
